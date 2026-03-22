@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,29 +7,63 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0e0e0e;
-    --bg2: #161616;
-    --bg3: #1e1e1e;
-    --border: rgba(255,255,255,0.08);
+  /* ── DARK THEME (default) ── */
+  [data-theme="dark"] {
+    --bg:      #0e0e0e;
+    --bg2:     #161616;
+    --bg3:     #1e1e1e;
+    --border:  rgba(255,255,255,0.08);
     --border2: rgba(255,255,255,0.14);
-    --text: #e8e4dc;
-    --text2: #9a9590;
-    --text3: #5c5955;
-    --accent: #c9a85c;
+    --text:    #e8e4dc;
+    --text2:   #9a9590;
+    --text3:   #5c5955;
+    --accent:  #c9a85c;
     --accent2: #e8c97a;
-    --pos: #4caf7d;
-    --neg: #e05555;
-    --neu: #7a8fad;
-    --pos-bg: rgba(76,175,125,0.10);
-    --neg-bg: rgba(224,85,85,0.10);
-    --neu-bg: rgba(122,143,173,0.10);
+    --pos:     #4caf7d;
+    --neg:     #e05555;
+    --neu:     #7a8fad;
+    --pos-bg:     rgba(76,175,125,0.10);
+    --neg-bg:     rgba(224,85,85,0.10);
+    --neu-bg:     rgba(122,143,173,0.10);
     --pos-border: rgba(76,175,125,0.30);
     --neg-border: rgba(224,85,85,0.30);
     --neu-border: rgba(122,143,173,0.30);
+    --hero-grad1: rgba(201,168,92,0.06);
+    --hero-grad2: rgba(76,175,125,0.04);
+    --code-label-bg: rgba(255,255,255,0.04);
+    --toggle-bg: rgba(255,255,255,0.08);
   }
+
+  /* ── LIGHT THEME ── */
+  [data-theme="light"] {
+    --bg:      #faf8f4;
+    --bg2:     #f2efe9;
+    --bg3:     #ebe7df;
+    --border:  rgba(0,0,0,0.08);
+    --border2: rgba(0,0,0,0.13);
+    --text:    #1a1916;
+    --text2:   #5a5650;
+    --text3:   #9a9590;
+    --accent:  #9a6f2a;
+    --accent2: #7a5218;
+    --pos:     #1e7a4a;
+    --neg:     #b83030;
+    --neu:     #3a5578;
+    --pos-bg:     rgba(30,122,74,0.08);
+    --neg-bg:     rgba(184,48,48,0.08);
+    --neu-bg:     rgba(58,85,120,0.08);
+    --pos-border: rgba(30,122,74,0.25);
+    --neg-border: rgba(184,48,48,0.25);
+    --neu-border: rgba(58,85,120,0.25);
+    --hero-grad1: rgba(154,111,42,0.06);
+    --hero-grad2: rgba(30,122,74,0.04);
+    --code-label-bg: rgba(0,0,0,0.04);
+    --toggle-bg: rgba(0,0,0,0.07);
+  }
+
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
+
   body {
     background: var(--bg);
     color: var(--text);
@@ -38,6 +72,7 @@
     line-height: 1.8;
     font-weight: 300;
     overflow-x: hidden;
+    transition: background 0.3s ease, color 0.3s ease;
   }
 
   /* ── Grain overlay ── */
@@ -45,10 +80,37 @@
     content: '';
     position: fixed; inset: 0;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-    opacity: 0.03;
+    opacity: 0.025;
     pointer-events: none;
     z-index: 999;
   }
+
+  /* ── Theme toggle ── */
+  .theme-toggle {
+    position: fixed;
+    top: 1.25rem;
+    right: 1.5rem;
+    z-index: 100;
+    background: var(--toggle-bg);
+    border: 1px solid var(--border2);
+    border-radius: 99px;
+    padding: 6px 14px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--text2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+    backdrop-filter: blur(8px);
+  }
+  .theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
+  .theme-toggle .t-sun  { display: none; }
+  .theme-toggle .t-moon { display: inline; }
+  [data-theme="light"] .theme-toggle .t-sun  { display: inline; }
+  [data-theme="light"] .theme-toggle .t-moon { display: none; }
 
   /* ── Hero ── */
   .hero {
@@ -64,8 +126,8 @@
   }
   .hero-bg {
     position: absolute; inset: 0;
-    background: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(201,168,92,0.06) 0%, transparent 70%),
-                radial-gradient(ellipse 50% 50% at 20% 70%, rgba(76,175,125,0.04) 0%, transparent 60%);
+    background: radial-gradient(ellipse 80% 60% at 60% 40%, var(--hero-grad1) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 50% at 20% 70%, var(--hero-grad2) 0%, transparent 60%);
   }
   .hero-eyebrow {
     font-family: 'IBM Plex Mono', monospace;
@@ -88,10 +150,7 @@
     opacity: 0;
     animation: fadeUp 0.9s ease 0.35s forwards;
   }
-  .hero h1 em {
-    font-style: italic;
-    color: var(--accent);
-  }
+  .hero h1 em { font-style: italic; color: var(--accent); }
   .hero-meta {
     display: flex;
     align-items: center;
@@ -129,16 +188,8 @@
   }
 
   /* ── Layout ── */
-  .container {
-    max-width: 760px;
-    margin: 0 auto;
-    padding: 0 2rem;
-  }
-  .wide-container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 2rem;
-  }
+  .container      { max-width: 760px;  margin: 0 auto; padding: 0 2rem; }
+  .wide-container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
 
   /* ── Sections ── */
   section { padding: 5rem 0; }
@@ -161,6 +212,7 @@
     font-style: italic;
     color: var(--accent);
     margin-bottom: 0.75rem;
+    margin-top: 2rem;
   }
   p { margin-bottom: 1.4rem; color: var(--text); }
   p:last-child { margin-bottom: 0; }
@@ -200,24 +252,51 @@
     padding: 2px 6px;
     border-radius: 4px;
   }
+  pre code { background: none; border: none; padding: 0; color: inherit; font-size: inherit; }
 
   /* ── Code block ── */
-  .code-block {
-    background: var(--bg2);
-    border: 1px solid var(--border2);
+  .code-wrap {
+    margin: 1.5rem 0;
     border-radius: 10px;
-    padding: 1.5rem;
-    margin: 2rem 0;
+    border: 1px solid var(--border2);
+    overflow: hidden;
+    background: var(--bg2);
+  }
+  .code-wrap-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 16px;
+    background: var(--code-label-bg);
+    border-bottom: 1px solid var(--border);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--text3);
+    text-transform: uppercase;
+  }
+  .lang-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.5;
+  }
+  pre {
+    background: var(--bg2);
+    padding: 1.25rem 1.5rem;
+    overflow-x: auto;
+    margin: 0;
     font-family: 'IBM Plex Mono', monospace;
     font-size: 13px;
-    line-height: 1.7;
-    overflow-x: auto;
+    line-height: 1.75;
     color: var(--text);
+    white-space: pre;
+    tab-size: 4;
   }
-  .code-block .comment { color: var(--text3); }
-  .code-block .keyword { color: var(--accent); }
-  .code-block .string { color: var(--pos); }
-  .code-block .output { color: var(--accent2); }
+  .kw  { color: var(--accent); }
+  .str { color: var(--pos); }
+  .cmt { color: var(--text3); font-style: italic; }
+  .out { color: var(--accent2); }
 
   /* ── Rule table ── */
   .rule-table {
@@ -268,7 +347,7 @@
     font-family: 'IBM Plex Mono', monospace;
     font-size: 12px;
     color: var(--text3);
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
   }
 
   /* ── Threshold pills ── */
@@ -306,18 +385,13 @@
     font-size: 12px;
   }
 
-  /* ──────────────────────────────────────
-     INTERACTIVE PLAYGROUND
-  ──────────────────────────────────────── */
+  /* ── INTERACTIVE PLAYGROUND ── */
   .playground-wrapper {
     background: var(--bg);
     padding: 5rem 0;
     border-top: 1px solid var(--border);
   }
-  .playground-header {
-    text-align: center;
-    margin-bottom: 3rem;
-  }
+  .playground-header { text-align: center; margin-bottom: 3rem; }
   .playground-header .eyebrow {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 11px;
@@ -326,16 +400,8 @@
     text-transform: uppercase;
     margin-bottom: 1rem;
   }
-  .playground-header h2 {
-    font-size: 2.5rem;
-    margin-bottom: 0.75rem;
-  }
-  .playground-header p {
-    color: var(--text2);
-    font-size: 16px;
-    max-width: 520px;
-    margin: 0 auto;
-  }
+  .playground-header h2 { font-size: 2.5rem; margin-bottom: 0.75rem; }
+  .playground-header p  { color: var(--text2); font-size: 16px; max-width: 520px; margin: 0 auto; }
 
   .playground-box {
     background: var(--bg2);
@@ -357,10 +423,7 @@
     text-transform: uppercase;
     margin-bottom: 0.75rem;
   }
-  .input-row {
-    display: flex;
-    gap: 10px;
-  }
+  .input-row { display: flex; gap: 10px; }
   .playground-input {
     flex: 1;
     background: var(--bg3);
@@ -387,14 +450,9 @@
     white-space: nowrap;
     transition: background 0.2s, transform 0.1s;
   }
-  .analyze-btn:hover { background: var(--accent2); }
+  .analyze-btn:hover  { background: var(--accent2); }
   .analyze-btn:active { transform: scale(0.97); }
-  .presets-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 1rem;
-  }
+  .presets-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 1rem; }
   .preset {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 11px;
@@ -409,7 +467,6 @@
   }
   .preset:hover { border-color: var(--accent); color: var(--accent); }
 
-  /* Result area */
   .playground-result { padding: 2rem; }
   .verdict-banner {
     display: flex;
@@ -443,9 +500,7 @@
     letter-spacing: 0.06em;
     font-weight: 500;
   }
-  .compound-bar-wrapper {
-    margin-bottom: 2rem;
-  }
+  .compound-bar-wrapper { margin-bottom: 2rem; }
   .compound-bar-track {
     height: 4px;
     background: var(--bg3);
@@ -468,8 +523,6 @@
     color: var(--text3);
     letter-spacing: 0.06em;
   }
-
-  /* Token chips */
   .tokens-label {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 11px;
@@ -478,26 +531,20 @@
     text-transform: uppercase;
     margin-bottom: 1rem;
   }
-  .tokens-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 2rem;
-  }
+  .tokens-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 2rem; }
   .token {
     padding: 6px 12px;
     border-radius: 8px;
     text-align: center;
     font-family: 'IBM Plex Mono', monospace;
   }
-  .token-word { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
+  .token-word  { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
   .token-score { font-size: 11px; opacity: 0.7; }
-  .token-rule { font-size: 10px; opacity: 0.5; margin-top: 2px; letter-spacing: 0.03em; }
+  .token-rule  { font-size: 10px; opacity: 0.5; margin-top: 2px; letter-spacing: 0.03em; }
   .tok-pos { background: var(--pos-bg); border: 1px solid var(--pos-border); color: var(--pos); }
   .tok-neg { background: var(--neg-bg); border: 1px solid var(--neg-border); color: var(--neg); }
   .tok-neu { background: var(--bg3); border: 1px solid var(--border); color: var(--text2); }
 
-  /* Score grid */
   .score-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -524,13 +571,7 @@
     font-size: 1.5rem;
     font-weight: 700;
   }
-
-  /* Rules fired */
-  .rules-fired {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
+  .rules-fired { display: flex; flex-direction: column; gap: 6px; }
   .rule-fired-item {
     display: flex;
     align-items: center;
@@ -550,8 +591,8 @@
     white-space: nowrap;
     letter-spacing: 0.05em;
   }
-  .rb-pos { background: var(--pos-bg); color: var(--pos); border: 1px solid var(--pos-border); }
-  .rb-neg { background: var(--neg-bg); color: var(--neg); border: 1px solid var(--neg-border); }
+  .rb-pos  { background: var(--pos-bg); color: var(--pos); border: 1px solid var(--pos-border); }
+  .rb-neg  { background: var(--neg-bg); color: var(--neg); border: 1px solid var(--neg-border); }
   .rb-info { background: var(--neu-bg); color: var(--neu); border: 1px solid var(--neu-border); }
   .rb-warn { background: rgba(201,168,92,0.1); color: var(--accent); border: 1px solid rgba(201,168,92,0.3); }
 
@@ -571,15 +612,15 @@
   /* ── Animations ── */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    to   { opacity: 1; transform: translateY(0); }
   }
   @keyframes fadeIn {
     from { opacity: 0; }
-    to { opacity: 0.6; }
+    to   { opacity: 0.6; }
   }
   @keyframes scrollPulse {
     0%,100% { opacity: 0.3; transform: scaleY(1); }
-    50% { opacity: 1; transform: scaleY(1.15); }
+    50%     { opacity: 1;   transform: scaleY(1.15); }
   }
   .reveal {
     opacity: 0;
@@ -591,18 +632,25 @@
   /* ── Responsive ── */
   @media (max-width: 640px) {
     .score-grid { grid-template-columns: repeat(2, 1fr); }
-    .hero h1 { font-size: 2.5rem; }
+    .hero h1    { font-size: 2.5rem; }
+    pre         { font-size: 12px; }
   }
 </style>
 </head>
 <body>
 
+<!-- THEME TOGGLE -->
+<button class="theme-toggle" onclick="toggleTheme()">
+  <span class="t-sun">&#9728; Day</span>
+  <span class="t-moon">&#9790; Night</span>
+</button>
+
 <!-- HERO -->
 <div class="hero">
   <div class="hero-bg"></div>
-  <div style="max-width: 1360px; margin: 0 auto; padding: 0 2rem; position: relative;">
-    <div class="hero-eyebrow">Natural Language Processing · Sentiment Analysis</div>
-    <h1>Understanding <em>VADER</em> — the Rule-Based Sentiment Engine That Just Works</h1>
+  <div style="max-width:1360px;margin:0 auto;padding:0 2rem;position:relative;">
+    <div class="hero-eyebrow">Natural Language Processing &middot; Sentiment Analysis</div>
+    <h1>Understanding <em>VADER</em> &mdash; the Rule-Based Sentiment Engine That Just Works</h1>
     <div class="hero-meta">
       <span>8 min read</span>
       <span>Interactive playground inside</span>
@@ -618,11 +666,10 @@
 <section>
   <div class="container">
     <div class="reveal">
-      <p class="drop-cap">Before large language models rewrote what "understanding text" could mean, a quiet little algorithm named VADER was doing a remarkable job of knowing whether you were happy, angry, or somewhere in between — without ever seeing a single training example from your dataset.</p>
-      <p>VADER, which stands for <strong>Valence Aware Dictionary and sEntiment Reasoner</strong>, was introduced in 2014 by C.J. Hutto and Eric Gilbert for social media text analysis. Today, it remains one of the most reliable and practical tools for quick sentiment work — especially when you need something fast, interpretable, and dependency-light.</p>
+      <p class="drop-cap">Before large language models rewrote what &ldquo;understanding text&rdquo; could mean, a quiet little algorithm named VADER was doing a remarkable job of knowing whether you were happy, angry, or somewhere in between &mdash; without ever seeing a single training example from your dataset.</p>
+      <p>VADER, which stands for <strong>Valence Aware Dictionary and sEntiment Reasoner</strong>, was introduced in 2014 by C.J. Hutto and Eric Gilbert for social media text analysis. Today, it remains one of the most reliable and practical tools for quick sentiment work &mdash; especially when you need something fast, interpretable, and dependency-light.</p>
       <p>This post breaks down how VADER works from the inside out: the lexicon, the heuristic rules, and the compound score formula. And at the bottom? A fully interactive playground where you can dissect any sentence yourself.</p>
     </div>
-
     <div class="pullquote reveal">
       No training data. No GPUs. No fine-tuning. Just a hand-crafted dictionary and five elegant rules.
     </div>
@@ -633,8 +680,8 @@
 <section>
   <div class="container">
     <div class="reveal">
-      <h2>Layer 1 — The Lexicon</h2>
-      <p>At VADER's core is a dictionary of roughly <strong>7,500 words</strong>, each hand-annotated by human raters on a scale from −4 (extremely negative) to +4 (extremely positive). These are called <em>valence scores</em>.</p>
+      <h2>Layer 1 &mdash; The Lexicon</h2>
+      <p>At VADER&rsquo;s core is a dictionary of roughly <strong>7,500 words</strong>, each hand-annotated by human raters on a scale from &minus;4 (extremely negative) to +4 (extremely positive). These are called <em>valence scores</em>.</p>
       <p>A few examples to build intuition:</p>
     </div>
 
@@ -643,17 +690,17 @@
         <tr><th>Word</th><th>Valence Score</th><th>Intuition</th></tr>
       </thead>
       <tbody>
-        <tr><td>amazing</td><td>+3.1</td><td>Strongly positive — most people agree</td></tr>
-        <tr><td>good</td><td>+1.9</td><td>Mildly positive — reliable baseline</td></tr>
-        <tr><td>okay</td><td>+0.4</td><td>Barely positive — tepid approval</td></tr>
-        <tr><td>bad</td><td>−2.1</td><td>Moderately negative</td></tr>
-        <tr><td>terrible</td><td>−2.5</td><td>Strongly negative</td></tr>
-        <tr><td>horrible</td><td>−2.8</td><td>Very strongly negative</td></tr>
+        <tr><td>amazing</td><td>+3.1</td><td>Strongly positive &mdash; most people agree</td></tr>
+        <tr><td>good</td><td>+1.9</td><td>Mildly positive &mdash; reliable baseline</td></tr>
+        <tr><td>okay</td><td>+0.4</td><td>Barely positive &mdash; tepid approval</td></tr>
+        <tr><td>bad</td><td>&minus;2.1</td><td>Moderately negative</td></tr>
+        <tr><td>terrible</td><td>&minus;2.5</td><td>Strongly negative</td></tr>
+        <tr><td>horrible</td><td>&minus;2.8</td><td>Very strongly negative</td></tr>
       </tbody>
     </table>
 
     <div class="reveal">
-      <p>Words that didn't appear in the lexicon receive a valence of <code>0</code> — neutral. This means VADER handles unknown words gracefully rather than crashing or guessing.</p>
+      <p>Words that don&rsquo;t appear in the lexicon receive a valence of <code>0</code> &mdash; neutral. This means VADER handles unknown words gracefully rather than crashing or guessing.</p>
     </div>
   </div>
 </section>
@@ -662,7 +709,7 @@
 <section>
   <div class="container">
     <div class="reveal">
-      <h2>Layer 2 — The Five Heuristic Rules</h2>
+      <h2>Layer 2 &mdash; The Five Heuristic Rules</h2>
       <p>Raw lexicon scores are just the starting point. VADER adjusts them using five linguistic rules that capture how humans actually write, especially on social media.</p>
     </div>
 
@@ -671,46 +718,55 @@
         <tr><th>Rule</th><th>Trigger</th><th>Effect</th></tr>
       </thead>
       <tbody>
-        <tr><td>Capitalization</td><td><code>GREAT</code> vs <code>great</code></td><td>Adds ±0.733 to intensity — shouting = more feeling</td></tr>
+        <tr><td>Capitalization</td><td><code>GREAT</code> vs <code>great</code></td><td>Adds &plusmn;0.733 to intensity &mdash; shouting = more feeling</td></tr>
         <tr><td>Punctuation</td><td><code>Great!!!</code></td><td>Each <code>!</code> adds a small boost (capped at +0.876)</td></tr>
-        <tr><td>Degree modifiers</td><td><code>very good</code>, <code>barely good</code></td><td>Multiplies score: amplifiers ×1.293, dampeners ×0.707</td></tr>
-        <tr><td>Negation</td><td><code>not good</code></td><td>Flips polarity: multiplies by −0.74</td></tr>
-        <tr><td>Contrastive "but"</td><td><code>good but terrible</code></td><td>Down-weights clause before "but", up-weights clause after</td></tr>
+        <tr><td>Degree modifiers</td><td><code>very good</code>, <code>barely good</code></td><td>Multiplies score: amplifiers &times;1.293, dampeners &times;0.707</td></tr>
+        <tr><td>Negation</td><td><code>not good</code></td><td>Flips polarity: multiplies by &minus;0.74</td></tr>
+        <tr><td>Contrastive &ldquo;but&rdquo;</td><td><code>good but terrible</code></td><td>Down-weights clause before &ldquo;but&rdquo;, up-weights clause after</td></tr>
       </tbody>
     </table>
 
     <div class="reveal">
-      <p>These rules interact. A sentence like <em>"not ABSOLUTELY terrible!!!"</em> triggers negation, capitalization, a degree modifier, and punctuation — each layering on top of the last. This is what makes VADER surprisingly nuanced for a rule-based system.</p>
+      <p>These rules interact. A sentence like <em>&ldquo;not ABSOLUTELY terrible!!!&rdquo;</em> triggers negation, capitalization, a degree modifier, and punctuation &mdash; each layering on top of the last. This is what makes VADER surprisingly nuanced for a rule-based system.</p>
     </div>
 
-    <div class="divider">· · ·</div>
+    <div class="divider">&middot; &middot; &middot;</div>
 
     <div class="reveal">
       <h3>Installing and using VADER</h3>
-      <div class="code-block">
-<span class="comment"># Install</span>
-pip install vaderSentiment
+      <p>First, install the package:</p>
 
-<span class="comment"># Basic usage</span>
-<span class="keyword">from</span> vaderSentiment.vaderSentiment <span class="keyword">import</span> SentimentIntensityAnalyzer
+      <div class="code-wrap">
+        <div class="code-wrap-label"><span>bash</span><span class="lang-dot"></span></div>
+        <pre><code><span class="cmt"># Install</span>
+pip install vaderSentiment</code></pre>
+      </div>
+
+      <p>Then run your first sentiment analysis:</p>
+
+      <div class="code-wrap">
+        <div class="code-wrap-label"><span>python</span><span class="lang-dot"></span></div>
+        <pre><code><span class="kw">from</span> vaderSentiment.vaderSentiment <span class="kw">import</span> SentimentIntensityAnalyzer
 
 analyzer = SentimentIntensityAnalyzer()
 
 sentences = [
-    <span class="string">"The food was ABSOLUTELY AMAZING!!!"</span>,
-    <span class="string">"Not bad at all"</span>,
-    <span class="string">"The movie was good but the ending was terrible"</span>,
+    <span class="str">"The food was ABSOLUTELY AMAZING!!!"</span>,
+    <span class="str">"Not bad at all"</span>,
+    <span class="str">"The movie was good but the ending was terrible"</span>,
 ]
 
-<span class="keyword">for</span> s <span class="keyword">in</span> sentences:
+<span class="kw">for</span> s <span class="kw">in</span> sentences:
     scores = analyzer.polarity_scores(s)
-    <span class="keyword">print</span>(f<span class="string">"{s}"</span>)
-    <span class="keyword">print</span>(scores)
+    <span class="kw">print</span>(f<span class="str">"{s}"</span>)
+    <span class="kw">print</span>(scores)
 
-<span class="output"># {'neg': 0.0, 'neu': 0.285, 'pos': 0.715, 'compound': 0.9246}
-# {'neg': 0.0, 'neu': 0.408, 'pos': 0.592, 'compound': 0.4310}
-# {'neg': 0.327, 'neu': 0.449, 'pos': 0.224, 'compound': -0.3182}</span>
+<span class="out"># {'neg': 0.0,   'neu': 0.285, 'pos': 0.715, 'compound':  0.9246}
+# {'neg': 0.0,   'neu': 0.408, 'pos': 0.592, 'compound':  0.4310}
+# {'neg': 0.327, 'neu': 0.449, 'pos': 0.224, 'compound': -0.3182}</span></code></pre>
       </div>
+
+      <p>The <code>polarity_scores()</code> method returns four values. <code>pos</code>, <code>neg</code>, and <code>neu</code> are normalized proportions that sum to 1.0. The <code>compound</code> score is what you actually use for classification.</p>
     </div>
   </div>
 </section>
@@ -719,32 +775,31 @@ sentences = [
 <section>
   <div class="container">
     <div class="reveal">
-      <h2>Layer 3 — The Compound Score</h2>
-      <p>After adjusting all token scores using the heuristic rules, VADER compresses everything into a single number — the <strong>compound score</strong> — using a normalization formula:</p>
+      <h2>Layer 3 &mdash; The Compound Score</h2>
+      <p>After adjusting all token scores using the heuristic rules, VADER compresses everything into a single number &mdash; the <strong>compound score</strong> &mdash; using this normalization formula:</p>
     </div>
 
     <div class="formula-card reveal">
-      <div class="formula">compound = x / √(x² + α)</div>
-      <div class="formula-note">where x = sum of all adjusted valence scores, α = 15 (empirical normalization constant)</div>
+      <div class="formula">compound = x / &radic;(x&sup2; + &alpha;)</div>
+      <div class="formula-note">where x = sum of all adjusted valence scores &nbsp;&middot;&nbsp; &alpha; = 15 (empirical normalization constant)</div>
     </div>
 
     <div class="reveal">
-      <p>This is essentially a sigmoid function. As <em>x</em> grows large and positive, the compound approaches +1.0. As it becomes large and negative, it approaches −1.0. The α = 15 constant was empirically tuned to produce meaningful separation around typical tweet-length text.</p>
-
+      <p>This is essentially a sigmoid function. As <em>x</em> grows large and positive, the compound approaches +1.0. As it becomes large and negative, it approaches &minus;1.0. The &alpha; = 15 constant was empirically tuned to produce meaningful separation around typical tweet-length text.</p>
       <p>The resulting compound score is classified using fixed thresholds:</p>
 
       <div class="threshold-row">
         <div class="threshold-pill pill-pos">
-          <span class="pill-num">compound ≥ 0.05</span>
-          <span>→ Positive</span>
+          <span class="pill-num">compound &ge; 0.05</span>
+          <span>&rarr; Positive</span>
         </div>
         <div class="threshold-pill pill-neg">
-          <span class="pill-num">compound ≤ −0.05</span>
-          <span>→ Negative</span>
+          <span class="pill-num">compound &le; &minus;0.05</span>
+          <span>&rarr; Negative</span>
         </div>
         <div class="threshold-pill pill-neu">
-          <span class="pill-num">between −0.05 and 0.05</span>
-          <span>→ Neutral</span>
+          <span class="pill-num">between &minus;0.05 and 0.05</span>
+          <span>&rarr; Neutral</span>
         </div>
       </div>
     </div>
@@ -755,18 +810,18 @@ sentences = [
 
     <div class="reveal">
       <h3>A worked example</h3>
-      <p>Let's trace <em>"The food was ABSOLUTELY AMAZING!!!"</em> step by step:</p>
+      <p>Let&rsquo;s trace <em>&ldquo;The food was ABSOLUTELY AMAZING!!!&rdquo;</em> step by step:</p>
     </div>
 
     <table class="rule-table reveal">
       <thead><tr><th>Step</th><th>Value</th><th>What happened</th></tr></thead>
       <tbody>
-        <tr><td>Base score: "amazing"</td><td>+3.1</td><td>Direct lexicon lookup</td></tr>
-        <tr><td>Degree modifier: "absolutely"</td><td>×1.293 → +4.01</td><td>Amplifier boosts magnitude</td></tr>
-        <tr><td>Capitalization: "AMAZING"</td><td>+0.733 → +4.74</td><td>ALL-CAPS signals shouting intensity</td></tr>
-        <tr><td>Punctuation: "!!!"</td><td>+0.876 → +5.62</td><td>Three exclamation marks, capped at 0.876</td></tr>
-        <tr><td>Compound formula</td><td>5.62 / √(5.62² + 15)</td><td>Normalization via alpha=15</td></tr>
-        <tr><td><strong>Final compound</strong></td><td><strong>+0.9246</strong></td><td><strong>→ Positive</strong></td></tr>
+        <tr><td>Base score: &ldquo;amazing&rdquo;</td><td>+3.1</td><td>Direct lexicon lookup</td></tr>
+        <tr><td>Degree modifier: &ldquo;absolutely&rdquo;</td><td>&times;1.293 &rarr; +4.01</td><td>Amplifier boosts magnitude</td></tr>
+        <tr><td>Capitalization: &ldquo;AMAZING&rdquo;</td><td>+0.733 &rarr; +4.74</td><td>ALL-CAPS signals shouting intensity</td></tr>
+        <tr><td>Punctuation: &ldquo;!!!&rdquo;</td><td>+0.876 &rarr; +5.62</td><td>Three exclamation marks, capped at 0.876</td></tr>
+        <tr><td>Compound formula</td><td>5.62 / &radic;(5.62&sup2; + 15)</td><td>Normalization via &alpha; = 15</td></tr>
+        <tr><td><strong>Final compound</strong></td><td><strong>+0.9246</strong></td><td><strong>&rarr; Positive</strong></td></tr>
       </tbody>
     </table>
   </div>
@@ -776,34 +831,34 @@ sentences = [
 <section>
   <div class="container">
     <div class="reveal">
-      <h2>When to use VADER — and when not to</h2>
-      <p>VADER shines in specific situations. It was designed for short, informal text — tweets, product reviews, Reddit comments, chat messages. It handles emoticons, slang, and internet punctuation natively.</p>
-      <p>It excels at <strong>speed and interpretability</strong>. Every score can be explained token by token — there are no black boxes. For production systems where you need to audit why something was flagged as negative, VADER gives you a full audit trail for free.</p>
+      <h2>When to use VADER &mdash; and when not to</h2>
+      <p>VADER shines in specific situations. It was designed for short, informal text &mdash; tweets, product reviews, Reddit comments, chat messages. It handles emoticons, slang, and internet punctuation natively.</p>
+      <p>It excels at <strong>speed and interpretability</strong>. Every score can be explained token by token &mdash; there are no black boxes. For production systems where you need to audit why something was flagged as negative, VADER gives you a full audit trail for free.</p>
       <p>Where it struggles: domain-specific language (medical, legal, financial), sarcasm, and long-form text where sentiment builds across sentences. For those cases, transformer-based models like RoBERTa-sentiment or a fine-tuned BERT will outperform it significantly.</p>
     </div>
-
     <div class="pullquote reveal">
       Use VADER as your first tool. It will handle 70% of your cases with zero training data and no GPU.
     </div>
   </div>
 </section>
 
-<!-- ── INTERACTIVE PLAYGROUND ── -->
+<!-- INTERACTIVE PLAYGROUND -->
 <div class="playground-wrapper">
   <div class="wide-container">
 
     <div class="playground-header reveal">
       <div class="eyebrow">Interactive</div>
       <h2>Try it yourself</h2>
-      <p>Type any sentence and watch VADER break it down — token by token, rule by rule.</p>
+      <p>Type any sentence and watch VADER break it down &mdash; token by token, rule by rule.</p>
     </div>
 
     <div class="playground-box reveal">
       <div class="playground-top">
         <div class="input-label">Your sentence</div>
         <div class="input-row">
-          <input class="playground-input" id="sent-input" type="text" value="The food was ABSOLUTELY AMAZING!!!" placeholder="Type a sentence..." />
-          <button class="analyze-btn" onclick="analyze()">Analyze ↗</button>
+          <input class="playground-input" id="sent-input" type="text"
+            value="The food was ABSOLUTELY AMAZING!!!" placeholder="Type a sentence..." />
+          <button class="analyze-btn" onclick="analyze()">Analyze &#8599;</button>
         </div>
         <div class="presets-row">
           <button class="preset" onclick="setEx('The food was ABSOLUTELY AMAZING!!!')">AMAZING!!!</button>
@@ -818,48 +873,45 @@ sentences = [
       </div>
 
       <div class="playground-result">
-        <!-- Verdict -->
         <div class="verdict-banner">
-          <div class="compound-display" id="compound-display">—</div>
+          <div class="compound-display" id="compound-display">&mdash;</div>
           <div class="verdict-info">
-            <div class="verdict-label">Compound score · Classification</div>
-            <div class="verdict-tag" id="verdict-tag">—</div>
+            <div class="verdict-label">Compound score &middot; Classification</div>
+            <div class="verdict-tag" id="verdict-tag">&mdash;</div>
           </div>
         </div>
 
-        <!-- Bar -->
         <div class="compound-bar-wrapper">
           <div class="compound-bar-track">
             <div class="compound-bar-fill" id="compound-bar" style="width:50%"></div>
           </div>
-          <div class="compound-bar-labels"><span>−1.0 Negative</span><span>0 Neutral</span><span>+1.0 Positive</span></div>
+          <div class="compound-bar-labels">
+            <span>&minus;1.0 Negative</span><span>0 Neutral</span><span>+1.0 Positive</span>
+          </div>
         </div>
 
-        <!-- Score grid -->
         <div class="score-grid">
           <div class="score-card">
             <div class="score-card-label">pos</div>
-            <div class="score-card-val" id="sc-pos" style="color:var(--pos)">—</div>
+            <div class="score-card-val" id="sc-pos" style="color:var(--pos)">&mdash;</div>
           </div>
           <div class="score-card">
             <div class="score-card-label">neg</div>
-            <div class="score-card-val" id="sc-neg" style="color:var(--neg)">—</div>
+            <div class="score-card-val" id="sc-neg" style="color:var(--neg)">&mdash;</div>
           </div>
           <div class="score-card">
             <div class="score-card-label">neu</div>
-            <div class="score-card-val" id="sc-neu" style="color:var(--neu)">—</div>
+            <div class="score-card-val" id="sc-neu" style="color:var(--neu)">&mdash;</div>
           </div>
           <div class="score-card">
             <div class="score-card-label">raw sum</div>
-            <div class="score-card-val" id="sc-raw" style="color:var(--text2)">—</div>
+            <div class="score-card-val" id="sc-raw" style="color:var(--text2)">&mdash;</div>
           </div>
         </div>
 
-        <!-- Tokens -->
         <div class="tokens-label">Token breakdown</div>
         <div class="tokens-row" id="tokens-row"></div>
 
-        <!-- Rules -->
         <div class="tokens-label">Heuristic rules fired</div>
         <div class="rules-fired" id="rules-fired"></div>
       </div>
@@ -873,17 +925,19 @@ sentences = [
   <div class="container">
     <div class="reveal">
       <h2>A final thought</h2>
-      <p>VADER is a reminder that not every problem needs a neural network. For sentiment in short, informal text — the vast majority of what the internet produces — a thoughtfully curated dictionary plus five well-chosen rules will take you remarkably far.</p>
+      <p>VADER is a reminder that not every problem needs a neural network. For sentiment in short, informal text &mdash; the vast majority of what the internet produces &mdash; a thoughtfully curated dictionary plus five well-chosen rules will take you remarkably far.</p>
       <p>When you do reach for a larger model, VADER can still serve as a fast baseline, a sanity check, or an interpretability layer running alongside your more complex predictions.</p>
       <p>The code snippet above is all you need to get started. The playground above is how you build intuition. The rest is your data.</p>
     </div>
 
-    <div class="divider">· · ·</div>
+    <div class="divider">&middot; &middot; &middot;</div>
 
-    <div class="reveal" style="margin-top: 2rem;">
-      <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text3); letter-spacing: 0.04em;">
-        Reference: Hutto, C.J. &amp; Gilbert, E.E. (2014). VADER: A Parsimonious Rule-based Model for Sentiment Analysis of Social Media Text. ICWSM-14.<br><br>
-        VADER lexicon scores used in the playground are approximations for illustration. Use the <code>vaderSentiment</code> Python library for production-accurate scores.
+    <div class="reveal" style="margin-top:2rem;">
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text3);letter-spacing:0.04em;">
+        Reference: Hutto, C.J. &amp; Gilbert, E.E. (2014). VADER: A Parsimonious Rule-based Model for
+        Sentiment Analysis of Social Media Text. ICWSM-14.<br><br>
+        VADER lexicon scores used in the playground are approximations for illustration.
+        Use the <code>vaderSentiment</code> Python library for production-accurate scores.
       </p>
     </div>
   </div>
@@ -891,131 +945,164 @@ sentences = [
 
 <footer>
   <div class="container">
-    <p>Built with <a href="https://github.com/cjhutto/vaderSentiment" target="_blank">vaderSentiment</a> · Hutto &amp; Gilbert, 2014</p>
+    <p>Built with <a href="https://github.com/cjhutto/vaderSentiment" target="_blank">vaderSentiment</a>
+    &middot; Hutto &amp; Gilbert, 2014</p>
   </div>
 </footer>
 
 <script>
+  /* ── Theme toggle ── */
+  function toggleTheme() {
+    const html = document.documentElement;
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('vader-theme', next);
+  }
+  (function () {
+    const saved = localStorage.getItem('vader-theme');
+    if (saved) document.documentElement.setAttribute('data-theme', saved);
+  })();
+
   /* ── Scroll reveal ── */
-  const io = new IntersectionObserver((entries) => {
+  const io = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
   /* ── VADER engine ── */
   const LEXICON = {
-    amazing: 3.1, great: 2.2, good: 1.9, nice: 1.7, love: 3.2, excellent: 3.3,
-    wonderful: 2.8, fantastic: 3.0, best: 2.7, beautiful: 2.5, okay: 0.4, fine: 0.9,
-    happy: 2.1, pleased: 1.9, joyful: 2.7, delighted: 3.0, enjoy: 1.8, enjoyed: 1.8,
-    like: 1.2, liked: 1.2, perfect: 2.9, awesome: 3.1, superb: 3.2, brilliant: 2.8,
-    bad: -2.1, terrible: -2.5, horrible: -2.8, awful: -2.9, poor: -1.9, worst: -3.0,
-    hate: -2.7, disappointing: -2.2, mediocre: -1.0, dreadful: -2.7, disgusting: -2.7,
-    boring: -1.4, annoying: -1.9, useless: -2.1, pathetic: -2.4, disgusted: -2.7,
-    sad: -1.9, angry: -2.3, upset: -1.9, frustrating: -2.0, frustrated: -2.0,
-    wrong: -1.5, failed: -1.9, fail: -1.9, broken: -1.8
+    amazing:3.1,great:2.2,good:1.9,nice:1.7,love:3.2,excellent:3.3,
+    wonderful:2.8,fantastic:3.0,best:2.7,beautiful:2.5,okay:0.4,fine:0.9,
+    happy:2.1,pleased:1.9,joyful:2.7,delighted:3.0,enjoy:1.8,enjoyed:1.8,
+    like:1.2,liked:1.2,perfect:2.9,awesome:3.1,superb:3.2,brilliant:2.8,
+    bad:-2.1,terrible:-2.5,horrible:-2.8,awful:-2.9,poor:-1.9,worst:-3.0,
+    hate:-2.7,disappointing:-2.2,mediocre:-1.0,dreadful:-2.7,disgusting:-2.7,
+    boring:-1.4,annoying:-1.9,useless:-2.1,pathetic:-2.4,disgusted:-2.7,
+    sad:-1.9,angry:-2.3,upset:-1.9,frustrating:-2.0,frustrated:-2.0,
+    wrong:-1.5,failed:-1.9,fail:-1.9,broken:-1.8
   };
   const MODIFIERS = {
-    absolutely: 0.293, very: 0.293, extremely: 0.293, incredibly: 0.293,
-    really: 0.293, truly: 0.293, utterly: 0.293, completely: 0.293,
-    barely: -0.293, hardly: -0.293, slightly: -0.293, somewhat: -0.2,
-    kind: -0.1, sort: -0.1
+    absolutely:0.293,very:0.293,extremely:0.293,incredibly:0.293,
+    really:0.293,truly:0.293,utterly:0.293,completely:0.293,
+    barely:-0.293,hardly:-0.293,slightly:-0.293,somewhat:-0.2,
+    kind:-0.1,sort:-0.1
   };
-  const NEGATIONS = new Set(['not','no','never','neither','nor','none','nobody','nothing','nowhere','without','cant','cannot','wont','wouldnt','shouldnt','couldnt','didnt','wasnt','isnt','arent','dont']);
+  const NEGATIONS = new Set(['not','no','never','neither','nor','none','nobody','nothing',
+    'nowhere','without','cant','cannot','wont','wouldnt','shouldnt','couldnt',
+    'didnt','wasnt','isnt','arent','dont']);
 
   function setEx(s) { document.getElementById('sent-input').value = s; analyze(); }
 
   function analyze() {
     const raw = document.getElementById('sent-input').value.trim();
     if (!raw) return;
-    const words = raw.replace(/!/g, ' ! ').replace(/\?/g, ' ? ').trim().split(/\s+/).filter(Boolean);
+    const words = raw.replace(/!/g,' ! ').replace(/\?/g,' ? ').trim().split(/\s+/).filter(Boolean);
     const allCaps = words.filter(w => /[A-Za-z]/.test(w)).every(w => w === w.toUpperCase());
     let ruleLog = [], scores = [], tokenData = [];
-    let negActive = false, modMult = 1.0;
-    let hasBut = false;
+    let negActive = false, modMult = 1.0, hasBut = false;
 
     for (let i = 0; i < words.length; i++) {
-      const w = words[i];
-      const wl = w.replace(/[!?.,;:'"]+$/,'').toLowerCase();
-      const isNeg = NEGATIONS.has(wl);
-      const isCaps = w === w.toUpperCase() && /[A-Z]/.test(w) && !allCaps;
-      const isMod = MODIFIERS.hasOwnProperty(wl);
+      const w  = words[i];
+      const wl = w.replace(/[!?.,;:'"]+$/, '').toLowerCase();
+      const isNeg   = NEGATIONS.has(wl);
+      const isCaps  = w === w.toUpperCase() && /[A-Z]/.test(w) && !allCaps;
+      const isMod   = Object.prototype.hasOwnProperty.call(MODIFIERS, wl);
       const isPunct = /^[!?]+$/.test(w);
-      if (wl === 'but') { hasBut = true; tokenData.push({word:w,score:null,cls:'tok-neu',rules:['contrastive "but"']}); continue; }
-      if (isNeg) { negActive = true; tokenData.push({word:w,score:null,cls:'tok-neu',rules:['negation marker']}); continue; }
-      if (isPunct) { tokenData.push({word:w,score:null,cls:'tok-neu',rules:['punctuation']}); continue; }
-      if (isMod) { modMult = 1 + MODIFIERS[wl]; tokenData.push({word:w,score:null,cls:'tok-neu',rules:[MODIFIERS[wl]>0?'amplifier':'dampener']}); continue; }
-      let base = LEXICON[wl] ?? null;
-      if (base === null) { negActive = false; modMult = 1.0; tokenData.push({word:w,score:null,cls:'tok-neu',rules:[]}); continue; }
-      let adj = base; let applied = [];
-      if (isCaps) { adj += adj > 0 ? 0.733 : -0.733; applied.push('ALL-CAPS'); }
-      if (modMult !== 1.0) { const d = (adj * modMult) - adj; applied.push(`mod ×${modMult.toFixed(2)}`); adj *= modMult; }
-      if (negActive) { adj *= -0.74; applied.push('negated'); }
+
+      if (wl === 'but') {
+        hasBut = true;
+        tokenData.push({ word:w, score:null, cls:'tok-neu', rules:['contrastive "but"'] });
+        continue;
+      }
+      if (isNeg) {
+        negActive = true;
+        tokenData.push({ word:w, score:null, cls:'tok-neu', rules:['negation marker'] });
+        continue;
+      }
+      if (isPunct) {
+        tokenData.push({ word:w, score:null, cls:'tok-neu', rules:['punctuation'] });
+        continue;
+      }
+      if (isMod) {
+        modMult = 1 + MODIFIERS[wl];
+        tokenData.push({ word:w, score:null, cls:'tok-neu', rules:[MODIFIERS[wl] > 0 ? 'amplifier' : 'dampener'] });
+        continue;
+      }
+
+      const base = Object.prototype.hasOwnProperty.call(LEXICON, wl) ? LEXICON[wl] : null;
+      if (base === null) {
+        negActive = false; modMult = 1.0;
+        tokenData.push({ word:w, score:null, cls:'tok-neu', rules:[] });
+        continue;
+      }
+
+      let adj = base, applied = [];
+      if (isCaps)          { adj += adj > 0 ? 0.733 : -0.733; applied.push('ALL-CAPS'); }
+      if (modMult !== 1.0) { applied.push('mod \u00d7' + modMult.toFixed(2)); adj *= modMult; }
+      if (negActive)       { adj *= -0.74; applied.push('negated'); }
       negActive = false; modMult = 1.0;
       scores.push(adj);
-      tokenData.push({word:w,score:adj,cls:adj>0?'tok-pos':adj<0?'tok-neg':'tok-neu',rules:applied});
+      tokenData.push({ word:w, score:adj, cls: adj > 0 ? 'tok-pos' : adj < 0 ? 'tok-neg' : 'tok-neu', rules: applied });
     }
 
-    const excl = (raw.match(/!/g)||[]).length;
+    const excl = (raw.match(/!/g) || []).length;
     let punctBoost = 0;
     if (excl > 0 && scores.length > 0) {
-      const ls = scores[scores.length-1];
+      const ls = scores[scores.length - 1];
       punctBoost = Math.min(excl * 0.292, 0.876) * (ls > 0 ? 1 : -1);
-      ruleLog.push({label:`${excl} exclamation mark${excl>1?'s':''} → punctuation boost`,badge:'rb-info',val:(punctBoost>0?'+':'')+punctBoost.toFixed(3)});
+      ruleLog.push({ label: excl + ' exclamation mark' + (excl > 1 ? 's' : '') + ' \u2192 punctuation boost',
+                     badge:'rb-info', val:(punctBoost > 0 ? '+' : '') + punctBoost.toFixed(3) });
     }
-    const hasModifier = tokenData.some(t=>t.rules.includes('amplifier')||t.rules.includes('dampener'));
-    const hasNeg = tokenData.some(t=>t.rules.includes('negation marker'));
-    const hasCaps = tokenData.some(t=>t.rules.includes('ALL-CAPS'));
-    if (hasCaps) ruleLog.push({label:'ALL-CAPS sentiment word → intensity amplified',badge:'rb-warn',val:'+0.733'});
-    if (hasModifier) ruleLog.push({label:'Degree modifier detected → score scaled',badge:'rb-info',val:'×1.293 or ×0.707'});
-    if (hasNeg) ruleLog.push({label:'Negation word → polarity flipped',badge:'rb-neg',val:'×−0.74'});
-    if (hasBut) ruleLog.push({label:'"But" detected → weight shifts to clause after "but"',badge:'rb-warn',val:'clause reweighting'});
-    if (ruleLog.length === 0) ruleLog.push({label:'No heuristics triggered — raw lexicon scores used',badge:'rb-info',val:'baseline'});
+    if (tokenData.some(t => t.rules.includes('ALL-CAPS')))
+      ruleLog.push({ label:'ALL-CAPS sentiment word \u2192 intensity amplified', badge:'rb-warn', val:'+0.733' });
+    if (tokenData.some(t => t.rules.includes('amplifier') || t.rules.includes('dampener')))
+      ruleLog.push({ label:'Degree modifier detected \u2192 score scaled', badge:'rb-info', val:'\u00d71.293 or \u00d70.707' });
+    if (tokenData.some(t => t.rules.includes('negation marker')))
+      ruleLog.push({ label:'Negation word \u2192 polarity flipped', badge:'rb-neg', val:'\u00d7\u22120.74' });
+    if (hasBut)
+      ruleLog.push({ label:'"But" detected \u2192 weight shifts to clause after "but"', badge:'rb-warn', val:'clause reweighting' });
+    if (ruleLog.length === 0)
+      ruleLog.push({ label:'No heuristics triggered \u2014 raw lexicon scores used', badge:'rb-info', val:'baseline' });
 
-    const sumX = scores.reduce((a,b)=>a+b,0) + punctBoost;
+    const sumX  = scores.reduce((a, b) => a + b, 0) + punctBoost;
     const alpha = 15;
-    const compound = sumX / Math.sqrt(sumX*sumX + alpha);
-    const c = Math.round(compound * 10000) / 10000;
-    const pos = scores.filter(s=>s>0).reduce((a,b)=>a+b,0);
-    const negV = Math.abs(scores.filter(s=>s<0).reduce((a,b)=>a+b,0));
+    const c     = Math.round((sumX / Math.sqrt(sumX * sumX + alpha)) * 10000) / 10000;
+    const pos   =  scores.filter(s => s > 0).reduce((a, b) => a + b, 0);
+    const negV  = Math.abs(scores.filter(s => s < 0).reduce((a, b) => a + b, 0));
     const total = pos + negV + 0.001;
-    const posN = Math.round((pos/total)*1000)/1000;
-    const negN = Math.round((negV/total)*1000)/1000;
-    const neuN = Math.round(Math.max(0,1-posN-negN)*1000)/1000;
+    const posN  = Math.round((pos  / total) * 1000) / 1000;
+    const negN  = Math.round((negV / total) * 1000) / 1000;
+    const neuN  = Math.round(Math.max(0, 1 - posN - negN) * 1000) / 1000;
 
-    // Render compound
     const verdict = c >= 0.05 ? 'POSITIVE' : c <= -0.05 ? 'NEGATIVE' : 'NEUTRAL';
-    const col = c >= 0.05 ? 'var(--pos)' : c <= -0.05 ? 'var(--neg)' : 'var(--neu)';
-    const vbg = c >= 0.05 ? 'var(--pos-bg)' : c <= -0.05 ? 'var(--neg-bg)' : 'var(--neu-bg)';
-    const vborder = c >= 0.05 ? '1px solid var(--pos-border)' : c <= -0.05 ? '1px solid var(--neg-border)' : '1px solid var(--neu-border)';
+    const col     = c >= 0.05 ? 'var(--pos)' : c <= -0.05 ? 'var(--neg)' : 'var(--neu)';
+    const vbg     = c >= 0.05 ? 'var(--pos-bg)' : c <= -0.05 ? 'var(--neg-bg)' : 'var(--neu-bg)';
+    const vbrd    = c >= 0.05 ? '1px solid var(--pos-border)' : c <= -0.05 ? '1px solid var(--neg-border)' : '1px solid var(--neu-border)';
+
     document.getElementById('compound-display').textContent = c.toFixed(4);
     document.getElementById('compound-display').style.color = col;
     const vt = document.getElementById('verdict-tag');
     vt.textContent = verdict;
-    vt.style.background = vbg; vt.style.border = vborder; vt.style.color = col;
-    vt.style.fontFamily = "'IBM Plex Mono', monospace"; vt.style.letterSpacing = '0.12em';
+    Object.assign(vt.style, { background:vbg, border:vbrd, color:col,
+      fontFamily:"'IBM Plex Mono', monospace", letterSpacing:'0.12em' });
 
-    // Bar
-    const pct = ((c + 1) / 2) * 100;
     const bar = document.getElementById('compound-bar');
-    bar.style.width = pct + '%';
-    bar.style.background = c >= 0.05 ? 'var(--pos)' : c <= -0.05 ? 'var(--neg)' : 'var(--neu)';
-    bar.style.opacity = '0.5';
+    bar.style.width      = (((c + 1) / 2) * 100) + '%';
+    bar.style.background = col;
+    bar.style.opacity    = '0.55';
 
-    // Score grid
     document.getElementById('sc-pos').textContent = posN.toFixed(3);
     document.getElementById('sc-neg').textContent = negN.toFixed(3);
     document.getElementById('sc-neu').textContent = neuN.toFixed(3);
     document.getElementById('sc-raw').textContent = (sumX > 0 ? '+' : '') + sumX.toFixed(3);
 
-    // Tokens
     document.getElementById('tokens-row').innerHTML = tokenData.map(t => `
       <div class="token ${t.cls}">
         <div class="token-word">${t.word}</div>
-        <div class="token-score">${t.score !== null ? (t.score>0?'+':'')+t.score.toFixed(2) : '—'}</div>
+        <div class="token-score">${t.score !== null ? (t.score > 0 ? '+' : '') + t.score.toFixed(2) : '&mdash;'}</div>
         ${t.rules.length ? `<div class="token-rule">${t.rules.join(', ')}</div>` : ''}
       </div>`).join('');
 
-    // Rules
     document.getElementById('rules-fired').innerHTML = ruleLog.map(r => `
       <div class="rule-fired-item">
         <span class="rule-badge ${r.badge}">${r.val}</span>
@@ -1023,7 +1110,6 @@ sentences = [
       </div>`).join('');
   }
 
-  // Analyze on Enter
   document.getElementById('sent-input').addEventListener('keydown', e => { if (e.key === 'Enter') analyze(); });
   analyze();
 </script>
